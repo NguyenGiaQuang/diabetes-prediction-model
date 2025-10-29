@@ -11,9 +11,7 @@
 
   <form method="POST">
     <div class="form-group">
-      <label for="gender">Giới tính 
-        <span class="info" title="Giới tính của bệnh nhân (Nam, Nữ hoặc Khác).">ℹ️</span>
-      </label>
+      <label for="gender">Giới tính <span class="info" title="Giới tính của bệnh nhân (Nam, Nữ hoặc Khác).">ℹ️</span></label>
       <select name="gender" required>
         <option value="Male">Nam</option>
         <option value="Female">Nữ</option>
@@ -22,16 +20,12 @@
     </div>
 
     <div class="form-group">
-      <label for="age">Tuổi 
-        <span class="info" title="Tuổi ảnh hưởng đến nguy cơ mắc bệnh tiểu đường.">ℹ️</span>
-      </label>
+      <label for="age">Tuổi <span class="info" title="Tuổi ảnh hưởng đến nguy cơ mắc bệnh tiểu đường.">ℹ️</span></label>
       <input type="number" name="age" min="0" max="120" required>
     </div>
 
     <div class="form-group">
-      <label for="hypertension">Cao huyết áp 
-        <span class="info" title="Người bị cao huyết áp có nguy cơ cao hơn mắc tiểu đường.">ℹ️</span>
-      </label>
+      <label for="hypertension">Cao huyết áp <span class="info" title="Người bị cao huyết áp có nguy cơ cao hơn mắc tiểu đường.">ℹ️</span></label>
       <select name="hypertension" required>
         <option value="0">Không</option>
         <option value="1">Có</option>
@@ -39,9 +33,7 @@
     </div>
 
     <div class="form-group">
-      <label for="heart_disease">Bệnh tim 
-        <span class="info" title="Tiểu đường thường đi kèm với các bệnh tim mạch.">ℹ️</span>
-      </label>
+      <label for="heart_disease">Bệnh tim <span class="info" title="Tiểu đường thường đi kèm với các bệnh tim mạch.">ℹ️</span></label>
       <select name="heart_disease" required>
         <option value="0">Không</option>
         <option value="1">Có</option>
@@ -49,9 +41,7 @@
     </div>
 
     <div class="form-group">
-      <label for="smoking_history">Hút thuốc 
-        <span class="info" title="Hút thuốc làm tăng nguy cơ mắc nhiều bệnh, bao gồm tiểu đường.">ℹ️</span>
-      </label>
+      <label for="smoking_history">Hút thuốc <span class="info" title="Hút thuốc làm tăng nguy cơ mắc nhiều bệnh, bao gồm tiểu đường.">ℹ️</span></label>
       <select name="smoking_history" required>
         <option value="never">Không hút</option>
         <option value="former">Đã từng</option>
@@ -60,23 +50,17 @@
     </div>
     
     <div class="form-group">
-      <label for="bmi">Chỉ số BMI 
-        <span class="info" title="BMI (Body Mass Index) cho biết mức độ gầy, bình thường hay thừa cân/dư cân.">ℹ️</span>
-      </label>
+      <label for="bmi">Chỉ số BMI <span class="info" title="BMI cho biết mức độ gầy, bình thường hay thừa cân/dư cân.">ℹ️</span></label>
       <input type="number" step="0.1" name="bmi" required>
     </div>
 
     <div class="form-group">
-      <label for="HbA1c_level">HbA1c Level 
-        <span class="info" title="HbA1c phản ánh mức đường huyết trung bình trong 2-3 tháng gần nhất.">ℹ️</span>
-      </label>
+      <label for="HbA1c_level">HbA1c Level <span class="info" title="Phản ánh mức đường huyết trung bình trong 2–3 tháng.">ℹ️</span></label>
       <input type="number" step="0.1" name="HbA1c_level" required>
     </div>
 
     <div class="form-group">
-      <label for="blood_glucose_level">Đường huyết 
-        <span class="info" title="Đường huyết đo lượng glucose trong máu tại thời điểm hiện tại.">ℹ️</span>
-      </label>
+      <label for="blood_glucose_level">Đường huyết <span class="info" title="Glucose trong máu tại thời điểm hiện tại.">ℹ️</span></label>
       <input type="number" step="0.1" name="blood_glucose_level" required>
     </div>
 
@@ -86,7 +70,7 @@
   {% if results %}
   <div class="results">
     <h2>📊 Kết quả dự đoán</h2>
-    <table>
+    <table class="fixed">
       <tr>
         <th>Mô hình</th>
         <th>Dự đoán</th>
@@ -95,7 +79,13 @@
       {% for model, (pred, prob) in results.items() %}
       <tr>
         <td>{{ model }}</td>
-        <td>{{ "Có" if pred==1 else "Không" }}</td>
+        <td>
+          {% if pred==1 %}
+            <span class="badge warn">Có</span>
+          {% else %}
+            <span class="badge ok">Không</span>
+          {% endif %}
+        </td>
         <td>{{ "%.2f"|format(prob*100) }}%</td>
       </tr>
       {% endfor %}
@@ -109,25 +99,124 @@
     <img src="{{ url_for('chart') }}" alt="Biểu đồ xác suất">
     
     <h3>🔎 Chỉ số đánh giá mô hình</h3>
-    <table>
-      <tr>
-        <th>Mô hình</th>
-        <th>Accuracy</th>
-        <th>MAE</th>
-        <th>MSE</th>
-        <th>R²</th>
-      </tr>
-      {% for model, vals in metrics.items() %}
-      <tr>
-        <td>{{ model }}</td>
-        <td>{{ "%.2f"|format(vals["ACC"]*100) }}%</td>
-        <td>{{ "%.4f"|format(vals["MAE"]) }}</td>
-        <td>{{ "%.4f"|format(vals["MSE"]) }}</td>
-        <td>{{ "%.4f"|format(vals["R2"]) }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+    <div class="scroll-x">
+      <table class="fixed">
+        <tr>
+          <th>Mô hình</th>
+          <th>Accuracy</th>
+          <th>MAE</th>
+          <th>MSE</th>
+          <th>R²</th>
+        </tr>
+        {% for model, vals in metrics.items() %}
+        <tr>
+          <td>{{ model }}</td>
+          <td>{{ "%.2f"|format(vals["ACC"]*100) }}%</td>
+          <td>{{ "%.4f"|format(vals["MAE"]) }}</td>
+          <td>{{ "%.4f"|format(vals["MSE"]) }}</td>
+          <td>{{ "%.4f"|format(vals["R2"]) }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
   </div>
 
+  {% if trace %}
+  <div class="steps">
+    <h2>🧭 Quy trình xử lý dữ liệu (từng bước)</h2>
+
+    <details open>
+      <summary>1) Dữ liệu gốc từ Form</summary>
+      <div class="kv">
+        <div>Giới tính</div><div class="mono">{{ trace.raw.gender }}</div>
+        <div>Tuổi</div><div class="mono">{{ trace.raw.age }}</div>
+        <div>Cao huyết áp</div><div class="mono">{{ trace.raw.hypertension }}</div>
+        <div>Bệnh tim</div><div class="mono">{{ trace.raw.heart_disease }}</div>
+        <div>Lịch sử hút thuốc</div><div class="mono">{{ trace.raw.smoking_history }}</div>
+        <div>BMI</div><div class="mono">{{ trace.raw.bmi }}</div>
+        <div>HbA1c</div><div class="mono">{{ trace.raw.HbA1c_level }}</div>
+        <div>Đường huyết</div><div class="mono">{{ trace.raw.blood_glucose_level }}</div>
+      </div>
+    </details>
+
+    <details open>
+      <summary>2) Mã hoá biến phân loại (LabelEncoder)</summary>
+      <div class="small">Bảng ánh xạ: giá trị gốc → mã số đã học</div>
+      <div class="scroll-x">
+        <table class="fixed">
+          <tr><th>Thuộc tính</th><th>Giá trị gốc</th><th>Mã</th></tr>
+          {% for k, v in trace.encoders.gender.items() %}
+          <tr><td>gender</td><td class="mono">{{ k }}</td><td class="mono">{{ v }}</td></tr>
+          {% endfor %}
+          {% for k, v in trace.encoders.smoking_history.items() %}
+          <tr><td>smoking_history</td><td class="mono">{{ k }}</td><td class="mono">{{ v }}</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="small">Giá trị sau mã hoá cho bản ghi hiện tại:</div>
+      <div class="scroll-x">
+        <table class="fixed">
+          <tr>{% for fn in feature_names %}<th>{{ fn }}</th>{% endfor %}</tr>
+          <tr>{% for fn in feature_names %}<td class="mono">{{ trace.encoded_row[fn] }}</td>{% endfor %}</tr>
+        </table>
+      </div>
+    </details>
+
+    <details open>
+      <summary>3) Chuẩn hoá MinMaxScaler</summary>
+      <div class="small">Công thức: x_scaled = x * scale + min_offset (ứng với mỗi thuộc tính).</div>
+      <div class="scroll-x">
+        <table class="fixed">
+          <tr>
+            <th>Thuộc tính</th><th>Min (train)</th><th>Max (train)</th><th>scale</th><th>min_offset</th>
+          </tr>
+          {% for fn in feature_names %}
+          <tr>
+            <td>{{ fn }}</td>
+            <td class="mono">{{ "%.4f"|format(trace.scaler_info[fn].min) }}</td>
+            <td class="mono">{{ "%.4f"|format(trace.scaler_info[fn].max) }}</td>
+            <td class="mono">{{ "%.6f"|format(trace.scaler_info[fn].scale) }}</td>
+            <td class="mono">{{ "%.6f"|format(trace.scaler_info[fn].min_offset) }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="small">Vector sau chuẩn hoá cho bản ghi hiện tại:</div>
+      <div class="scroll-x">
+        <table class="fixed">
+          <tr>{% for fn in feature_names %}<th>{{ fn }}</th>{% endfor %}</tr>
+          <tr>{% for fn in feature_names %}<td class="mono">{{ "%.6f"|format(trace.scaled_row[fn]) }}</td>{% endfor %}</tr>
+        </table>
+      </div>
+    </details>
+
+    <details open>
+      <summary>4) Dự đoán mô hình & Ngưỡng quyết định</summary>
+      <div class="small">Ngưỡng mặc định: {{ trace.threshold }} (>= ngưỡng → dự đoán "Có").</div>
+      <div class="scroll-x">
+        <table class="fixed">
+          <tr><th>Mô hình</th><th>Xác suất (p)</th><th>So với ngưỡng</th><th>Kết luận</th></tr>
+          {% for model, (pred, prob) in results.items() %}
+          <tr>
+            <td>{{ model }}</td>
+            <td class="mono">{{ "%.4f"|format(prob) }}</td>
+            <td class="mono">{% if prob >= trace.threshold %}p ≥ threshold{% else %}p &lt; threshold{% endif %}</td>
+            <td>
+              {% if pred==1 %}<span class="badge warn">Có</span>{% else %}<span class="badge ok">Không</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </details>
+
+  </div>
+  {% endif %}
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log("Trang dự đoán Tiểu đường đã load (phiên bản có tường bước).");
+    });
+  </script>
 </body>
 </html>

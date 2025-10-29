@@ -1,91 +1,274 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background: #f9f9f9;
+
+/* =========================================
+   DỰ ĐOÁN TIỂU ĐƯỜNG — THEME V2
+   - Drop-in replacement for static/style.css
+   - Modern, clean, responsive, accessible
+   ========================================= */
+
+/* ---------- CSS Variables ---------- */
+:root{
+  --bg: #0b1220;
+  --card: #0f172a;
+  --muted: #94a3b8;
+  --text: #e2e8f0;
+  --heading: #f8fafc;
+  --border: #1e293b;
+  --accent: #22d3ee;   /* cyan-400 */
+  --accent-2: #60a5fa; /* blue-400 */
+  --ok: #22c55e;
+  --warn: #f97316;
+  --danger: #ef4444;
+  --ring: rgba(96,165,250,.4);
+  --shadow: 0 10px 20px rgba(2,6,23,.35), 0 6px 12px rgba(2,6,23,.2);
 }
 
-h1, h2, h3 {
+@media (prefers-color-scheme: light){
+  :root{
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --heading: #0b1220;
+    --muted: #475569;
+    --border: #e2e8f0;
+    --ring: rgba(14,165,233,.25);
+    --shadow: 0 10px 18px rgba(15,23,42,.06), 0 4px 10px rgba(15,23,42,.04);
+  }
+}
+
+/* ---------- Base ---------- */
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  background: linear-gradient(180deg, var(--bg) 0%, #0d1630 100%);
+  color: var(--text);
+  line-height: 1.55;
+  padding: 28px 18px 60px;
+}
+
+h1,h2,h3{
+  color: var(--heading);
+  letter-spacing: .2px;
+  margin: 0 0 12px;
   text-align: center;
-  color: #333;
+}
+h1{
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 18px;
+}
+h2{ font-size: clamp(20px, 2.4vw, 24px); font-weight: 700; }
+h3{ font-size: 18px; font-weight: 700; }
+
+/* ---------- Layout Cards ---------- */
+.card{
+  max-width: 1100px;
+  margin: 18px auto;
+  background: linear-gradient(180deg, var(--card), color-mix(in oklab, var(--card) 88%, black));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 22px;
 }
 
-form {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* ---------- Form ---------- */
+form{
+  max-width: 920px;
+  margin: 20px auto;
+  padding: 22px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--card), color-mix(in oklab, var(--card) 88%, black));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
-
-.form-group {
-  margin-bottom: 15px;
+.form-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 18px;
 }
+@media (max-width: 720px){ .form-grid{ grid-template-columns: 1fr; } }
 
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+.form-group{ display:flex; flex-direction:column; gap:8px; }
+label{ font-weight: 600; color: var(--muted); display:flex; align-items:center; gap:6px; }
+.info{ cursor: help; font-size: 14px; color: var(--accent-2); }
+.info:hover{ filter: brightness(1.1); }
 
-input, select, button {
+input, select{
   width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background: #007BFF;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  font-size: 16px;
-}
-button:hover {
-  background: #0056b3;
-}
-
-.results, .charts {
-  max-width: 800px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 20px;
+  padding: 10px 12px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--card) 86%, black);
+  color: var(--text);
+  outline: none;
+  transition: border .18s ease, box-shadow .18s ease, transform .06s ease;
+}
+input:focus, select:focus{
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 6px var(--ring);
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+
+button{
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #0b1220;
+  font-weight: 800;
+  letter-spacing: .3px;
+  cursor: pointer;
+  transition: transform .08s ease, filter .2s ease;
+}
+button:hover{ filter: saturate(1.15) brightness(1.05); }
+button:active{ transform: translateY(1px) scale(.995); }
+
+/* ---------- Results & Charts ---------- */
+.results, .charts, .steps{ composes: card; }
+.results, .charts, .steps{ max-width: 1100px; }
+
+/* If your template still uses .results/.charts as wrappers without .card, style them here */
+.results, .charts, .steps{
+  margin: 26px auto;
+  background: linear-gradient(180deg, var(--card), color-mix(in oklab, var(--card) 88%, black));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 22px;
 }
 
-table {
+/* Charts images responsive */
+.charts img{
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  margin: 10px 0 14px;
+  box-shadow: 0 6px 14px rgba(2,6,23,.25);
+}
+
+/* ---------- Tables ---------- */
+table{
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
 }
-
-table, th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background: #007BFF;
-  color: white;
+th, td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
   text-align: center;
+  white-space: nowrap;
 }
+th{
+  position: sticky;
+  top: 0;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--card) 92%, black), color-mix(in oklab, var(--card) 88%, black));
+  color: var(--heading);
+  z-index: 1;
+  font-weight: 700;
+}
+tr:nth-child(even) td{ background: color-mix(in oklab, var(--card) 93%, black); }
+tr:hover td{ background: color-mix(in oklab, var(--card) 90%, black); }
 
-td {
-  text-align: center;
-}
+.scroll-x{ overflow: auto; }
+table.fixed td, table.fixed th{ white-space: nowrap; }
 
-.info {
-  cursor: help;
-  font-size: 14px;
-  margin-left: 5px;
-  color: #007BFF;
+/* ---------- Details / Summary blocks ---------- */
+details{
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  background: color-mix(in oklab, var(--card) 95%, black);
+  transition: background .2s ease, border-color .2s ease;
 }
-.info:hover {
-  color: #0056b3;
-}
-.tooltip {
+details:hover{ border-color: color-mix(in oklab, var(--accent-2) 40%, var(--border)); }
+details>summary{
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--heading);
+  list-style: none;
   position: relative;
-  display: inline-block;
+  padding-left: 24px;
 }
+details>summary::-webkit-details-marker{ display: none; }
+details>summary::before{
+  content: "▸";
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(2px);
+  transition: transform .2s ease;
+  color: var(--accent-2);
+}
+details[open]>summary::before{ transform: rotate(90deg) translateX(2px); }
+.small{ font-size: 12.5px; color: var(--muted); }
+
+/* ---------- Key-Value grid (section 1) ---------- */
+.kv{
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 10px 14px;
+  align-items: center;
+  margin: 8px 0 4px;
+}
+.mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: var(--heading);
+}
+
+/* ---------- Badges ---------- */
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--card) 92%, black);
+}
+.badge.ok{ color: #052e1a; background: #bbf7d0; border-color: #86efac; }
+.badge.warn{ color: #431407; background: #fed7aa; border-color: #fdba74; }
+
+/* ---------- Utility ---------- */
+.center{ text-align:center; }
+.mt-0{ margin-top:0 !important; }
+.mt-8{ margin-top:8px !important; }
+.mt-16{ margin-top:16px !important; }
+.mt-24{ margin-top:24px !important; }
+
+/* ---------- Page Header glow ---------- */
+h1::after{
+  content: "";
+  display:block;
+  height: 1px;
+  margin: 14px auto 0;
+  width: min(560px, 88%);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: .65;
+}
+
+/* ---------- Animations ---------- */
+@keyframes floatIn {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.card, form, .results, .charts, .steps{ animation: floatIn .38s ease both; }
+
+/* ---------- Accessibility ---------- */
+:focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; }
