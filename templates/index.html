@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dự đoán Tiểu đường</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <h1>🔬 Hệ thống dự đoán Tiểu đường</h1>
+
+  <form method="POST">
+    <div class="form-group">
+      <label for="gender">Giới tính 
+        <span class="info" title="Giới tính của bệnh nhân (Nam, Nữ hoặc Khác).">ℹ️</span>
+      </label>
+      <select name="gender" required>
+        <option value="Male">Nam</option>
+        <option value="Female">Nữ</option>
+        <option value="Other">Khác</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Tuổi 
+        <span class="info" title="Tuổi ảnh hưởng đến nguy cơ mắc bệnh tiểu đường.">ℹ️</span>
+      </label>
+      <input type="number" name="age" min="0" max="120" required>
+    </div>
+
+    <div class="form-group">
+      <label for="hypertension">Cao huyết áp 
+        <span class="info" title="Người bị cao huyết áp có nguy cơ cao hơn mắc tiểu đường.">ℹ️</span>
+      </label>
+      <select name="hypertension" required>
+        <option value="0">Không</option>
+        <option value="1">Có</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="heart_disease">Bệnh tim 
+        <span class="info" title="Tiểu đường thường đi kèm với các bệnh tim mạch.">ℹ️</span>
+      </label>
+      <select name="heart_disease" required>
+        <option value="0">Không</option>
+        <option value="1">Có</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="smoking_history">Hút thuốc 
+        <span class="info" title="Hút thuốc làm tăng nguy cơ mắc nhiều bệnh, bao gồm tiểu đường.">ℹ️</span>
+      </label>
+      <select name="smoking_history" required>
+        <option value="never">Không hút</option>
+        <option value="former">Đã từng</option>
+        <option value="current">Đang hút</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="bmi">Chỉ số BMI 
+        <span class="info" title="BMI (Body Mass Index) cho biết mức độ gầy, bình thường hay thừa cân/dư cân.">ℹ️</span>
+      </label>
+      <input type="number" step="0.1" name="bmi" required>
+    </div>
+
+    <div class="form-group">
+      <label for="HbA1c_level">HbA1c Level 
+        <span class="info" title="HbA1c phản ánh mức đường huyết trung bình trong 2-3 tháng gần nhất.">ℹ️</span>
+      </label>
+      <input type="number" step="0.1" name="HbA1c_level" required>
+    </div>
+
+    <div class="form-group">
+      <label for="blood_glucose_level">Đường huyết 
+        <span class="info" title="Đường huyết đo lượng glucose trong máu tại thời điểm hiện tại.">ℹ️</span>
+      </label>
+      <input type="number" step="0.1" name="blood_glucose_level" required>
+    </div>
+
+    <button type="submit">Dự đoán</button>
+  </form>
+
+  {% if results %}
+  <div class="results">
+    <h2>📊 Kết quả dự đoán</h2>
+    <table>
+      <tr>
+        <th>Mô hình</th>
+        <th>Dự đoán</th>
+        <th>Xác suất mắc bệnh</th>
+      </tr>
+      {% for model, (pred, prob) in results.items() %}
+      <tr>
+        <td>{{ model }}</td>
+        <td>{{ "Có" if pred==1 else "Không" }}</td>
+        <td>{{ "%.2f"|format(prob*100) }}%</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="charts">
+    <h2>📈 So sánh mô hình</h2>
+    <img src="{{ url_for('accuracy_chart') }}" alt="Biểu đồ độ chính xác">
+    <img src="{{ url_for('chart') }}" alt="Biểu đồ xác suất">
+    
+    <h3>🔎 Chỉ số đánh giá mô hình</h3>
+    <table>
+      <tr>
+        <th>Mô hình</th>
+        <th>Accuracy</th>
+        <th>MAE</th>
+        <th>MSE</th>
+        <th>R²</th>
+      </tr>
+      {% for model, vals in metrics.items() %}
+      <tr>
+        <td>{{ model }}</td>
+        <td>{{ "%.2f"|format(vals["ACC"]*100) }}%</td>
+        <td>{{ "%.4f"|format(vals["MAE"]) }}</td>
+        <td>{{ "%.4f"|format(vals["MSE"]) }}</td>
+        <td>{{ "%.4f"|format(vals["R2"]) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f9f9f9;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #007BFF;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+}
+button:hover {
+  background: #0056b3;
+}
+
+.results, .charts {
+  max-width: 800px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background: #007BFF;
+  color: white;
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+.info {
+  cursor: help;
+  font-size: 14px;
+  margin-left: 5px;
+  color: #007BFF;
+}
+.info:hover {
+  color: #0056b3;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
