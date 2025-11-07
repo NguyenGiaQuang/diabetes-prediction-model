@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Cây quyết định</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.modelview.css') }}">
+
+  <style>
+    .wrap{max-width: 1200px; margin: 22px auto; background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e7eb); border-radius: 12px; padding: 18px;}
+    img{width:100%; height:auto; border-radius: 12px; border: 1px solid var(--border, #e5e7eb);}
+  </style>
+</head>
+<body>
+  <h1 class="model-title">🌳 Cây quyết định (Decision Tree)</h1>
+  <div class="model-wrap">
+    <img src="{{ url_for('tree_png') }}" alt="Decision Tree" class="tree-img">
+    <p class="note">
+      Các nút hiển thị điều kiện chia, chỉ số impurity (gini),
+      tỷ lệ mẫu tại nút và phân bố lớp.
+    </p>
+    <a href="{{ url_for('index') }}" class="back-link">← Quay lại trang chính</a>
+  </div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn import tree as sktree
 
 app = Flask(__name__)
 
@@ -175,6 +176,58 @@ def chart():
     buf.seek(0)
     return send_file(buf, mimetype="image/png")
 
+@app.route("/equations/logistic")
+def logistic_equation_page():
+    """Trang hiển thị phương trình tuyến tính + sigmoid + bảng hệ số"""
+    clf = models["Logistic Regression"]
+    coef = clf.coef_[0]          # (n_features,)
+    intercept = clf.intercept_[0]
+
+    # Tạo biểu thức LaTeX cho phần tuyến tính + sigmoid
+    terms = [f"{coef[i]:+.4f}\\\\,x_{{{i+1}}}" for i in range(len(coef))]
+    linear = f"{intercept:+.4f} " + " ".join(terms)
+    latex = (
+        r"P(y=1 \mid \mathbf{x}) = \frac{1}{1 + e^{-(" + linear + r")}}"
+        r"\\[6pt]\text{với } \mathbf{x} = [" + ",\\;".join(feature_names) + r"]^\top\; \text{(đã MinMaxScale)}"
+    )
+
+    # Bảng hệ số theo từng đặc trưng
+    table = [{"feature": feature_names[i], "coef": float(coef[i])} for i in range(len(coef))]
+
+    return render_template("logistic.html",
+                           latex=latex,
+                           intercept=float(intercept),
+                           rows=table)
+
+@app.route("/equations/tree")
+def decision_tree_page():
+    """Trang hiển thị hình ảnh cây quyết định"""
+    return render_template("tree.html")
+
+@app.route("/tree.png")
+def tree_png():
+    """Vẽ cây quyết định bằng matplotlib"""
+    clf = models["Decision Tree"]
+    fig, ax = plt.subplots(figsize=(14, 10))
+    sktree.plot_tree(
+        clf,
+        feature_names=feature_names,
+        class_names=["0", "1"],
+        filled=True,
+        rounded=True,
+        impurity=True,
+        proportion=True,
+        fontsize=8,
+        ax=ax
+    )
+    buf = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format="png", dpi=160, bbox_inches="tight")
+    buf.seek(0)
+    plt.close()
+    return send_file(buf, mimetype="image/png")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+#so sánh tốc độ, độ chính xác g

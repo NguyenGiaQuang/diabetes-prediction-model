@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Phương trình Logistic Regression</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.modelview.css') }}">
+
+  <!-- MathJax để render LaTeX -->
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+  <style>
+    .wrap{max-width: 1000px; margin: 22px auto; background: var(--surface, #fff);
+      border: 1px solid var(--border, #e5e7eb); border-radius: 12px; padding: 18px;}
+    .eq{font-size: 20px; text-align:center; margin: 18px auto;}
+    table{width:100%; border-collapse: collapse; margin-top:12px; border-radius: 10px; overflow: hidden;}
+    th,td{padding:10px 12px; border-bottom:1px solid var(--border, #e5e7eb); text-align:center;}
+    th{background:#f3f6fc;}
+  </style>
+</head>
+<body>
+  <h1 class="model-title">🔢 Phương trình Logistic Regression</h1>
+  <div class="model-wrap">
+    <div class="equation-box">$$ {{ latex | safe }} $$</div>
+
+    <h3>Hệ số (coef) theo từng đặc trưng</h3>
+    <table class="coeff-table">
+      <tr><th>Thuộc tính (đã scale)</th><th>Hệ số</th></tr>
+      {% for r in rows %}
+      <tr><td>{{ r.feature }}</td><td>{{ "%.6f"|format(r.coef) }}</td></tr>
+      {% endfor %}
+    </table>
+
+    <p class="note">
+      🧮 Công thức sử dụng <b>đặc trưng đã chuẩn hoá bằng MinMaxScaler</b>.
+      Dự đoán lớp = 1 nếu \(P(y=1\mid x) \ge 0.5\).
+    </p>
+    <a href="{{ url_for('index') }}" class="back-link">← Quay lại trang chính</a>
+  </div>
+</body>
+</html>
